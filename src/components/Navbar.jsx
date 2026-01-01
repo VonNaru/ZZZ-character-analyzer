@@ -15,7 +15,7 @@ function Navbar({ onNavigate }) {
 }
 
 const navStyle = {
-  backgroundColor: 'gray',
+  backgroundColor: '#808080',
   height: '100vh',
   width: '150px',
   position: 'fixed',

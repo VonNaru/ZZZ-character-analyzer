@@ -1,8 +1,8 @@
 export default function Background({ page, children }) {
   const colors = {
-    home: '#000000ff',
-    about: '#16213e',
-    default: '#0f3460'
+    home: '#1a1a1a',
+    about: '#1a1a1a',
+    default: '#1a1a1a'
   };
 
   return (

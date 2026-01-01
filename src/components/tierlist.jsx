@@ -20,7 +20,10 @@ const TIER_ASSIGNMENTS = {
   'Astra Yao': { tier: 'T0', role: 'Support' },
   'Yuzuha': { tier: 'T0', role: 'Support' },
   'Lucia': { tier: 'T0', role: 'Support' },
-  'Miyabi': { tier: 'T0.5', role: 'Attacker' }
+  'Miyabi': { tier: 'T0.5', role: 'Attacker' },
+  'Trigger': { tier: 'T0', role: 'Stun'},
+  'Ju fufu': { tier: 'T0', role: 'Stun'},
+  'Dialyn': { tier: 'T0', role: 'Stun'},
 }
 
 // Character Card Component
@@ -76,7 +79,10 @@ export default function TierList() {
 
   const loadCharacters = async () => {
     try {
+      console.log('Fetching characters from API...')
       const data = await characterAPI.getAll()
+      console.log('Characters received:', data)
+      console.log('Number of characters:', data.length)
       setCharacters(data)
       setLoading(false)
     } catch (error) {

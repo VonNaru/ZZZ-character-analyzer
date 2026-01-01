@@ -44,4 +44,7 @@ INSERT INTO characters (name, element, rarity, role, image_url) VALUES
 ('Miyabi', NULL, 5, 'Attacker', 'https://img.game8.co/4059078/d955d184a5e8c2a1841d0f9723a19da0.png/show'),
 ('Astra Yao', NULL, 5, 'Support', 'https://img.game8.co/4080088/fa217d0eba80ff3a1694f354d33cc12e.png/show'),
 ('Yuzuha', NULL, 5, 'Support', 'https://img.game8.co/4212687/46603f907c8d4befa538f9bb94dd22d4.png/show'),
-('Lucia', NULL, 5, 'Support', 'https://img.game8.co/4303634/f8acab2bfbfc82495f4afd63269347a8.png/show');
+('Lucia', NULL, 5, 'Support', 'https://img.game8.co/4303634/f8acab2bfbfc82495f4afd63269347a8.png/show'),
+('Trigger', NULL, 5, 'Stun', 'https://img.game8.co/4143972/69524d93a8cd46f584c18ebbbac24e2d.png/show'),
+('Ju fufu', NULL, 5, 'Stun', 'https://img.game8.co/4204351/754c4dd9dd679ae1e930f4977645c09a.png/show'),
+('Dialyn', NULL, 5, 'Stun', 'https://img.game8.co/4348758/b4114e6aa73ddfd3b1c8bead24aa6592.png/show');
