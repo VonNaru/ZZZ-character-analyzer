@@ -1,6 +1,6 @@
 import maluImage from '/pictures/malu_tuh.jpg'
 
-function Navbar({ onNavigate }) {
+function Navbar({ onNavigate, onAdminClick }) {
   return (
     <nav style={navStyle}>
       <img src={maluImage} alt="Malu" style={maluImageStyle} />
@@ -9,6 +9,9 @@ function Navbar({ onNavigate }) {
       </button>
       <button style={buttonStyle} onClick={() => onNavigate('about')}>
         About
+      </button>
+      <button style={adminButtonStyle} onClick={onAdminClick}>
+        Admin Panel
       </button>
     </nav>
   )
@@ -41,6 +44,18 @@ const buttonStyle = {
   fontSize: '16px'
 }
 
+const adminButtonStyle = {
+  width: '100%',
+  padding: '10px',
+  marginTop: '20px',
+  backgroundColor: '#ff6b35',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  fontSize: '16px',
+  fontWeight: 'bold'
+}
 
 
 export default Navbar

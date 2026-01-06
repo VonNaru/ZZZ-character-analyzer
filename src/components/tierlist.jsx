@@ -24,6 +24,8 @@ const TIER_ASSIGNMENTS = {
   'Trigger': { tier: 'T0', role: 'Stun'},
   'Ju fufu': { tier: 'T0', role: 'Stun'},
   'Dialyn': { tier: 'T0', role: 'Stun'},
+  'Seed': { tier: 'T0.5', role: 'Attacker'},
+  'Alice': { tier: 'T0.5', role: 'Attacker'},
 }
 
 // Character Card Component
@@ -75,6 +77,13 @@ export default function TierList() {
 
   useEffect(() => {
     loadCharacters()
+    
+    // Auto refresh setiap 3 detik untuk melihat perubahan
+    const interval = setInterval(() => {
+      loadCharacters()
+    }, 3000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   const loadCharacters = async () => {
@@ -102,9 +111,12 @@ export default function TierList() {
     })
 
     characters.forEach(char => {
-      const assignment = TIER_ASSIGNMENTS[char.name]
-      if (assignment) {
-        tierData[assignment.tier][assignment.role].push(char)
+      // Gunakan tier dari database, fallback ke TIER_ASSIGNMENTS jika tidak ada
+      const tier = char.tier || TIER_ASSIGNMENTS[char.name]?.tier || 'T3'
+      const role = char.role || TIER_ASSIGNMENTS[char.name]?.role || 'Attacker'
+      
+      if (tierData[tier] && tierData[tier][role]) {
+        tierData[tier][role].push(char)
       }
     })
 
@@ -209,7 +221,10 @@ export default function TierList() {
       }}>
         <h3>Total Characters: {characters.length}</h3>
         <p style={{ color: '#888', marginTop: '10px' }}>
-          Tier list diambil dari database. Gambar karakter akan muncul jika tersedia.
+          📊 Tier list ini hanya untuk dilihat (view-only).
+        </p>
+        <p style={{ color: '#888', marginTop: '5px' }}>
+          🔐 Hanya admin yang dapat menambah atau mengedit karakter melalui Admin Panel.
         </p>
       </div>
     </div>

@@ -52,11 +52,11 @@ export function getCharacterById(req, res) {
 // Add new character
 export function addCharacter(req, res) {
   try {
-    const { name, element, rarity, role, image_url } = req.body;
+    const { name, element, rarity, role, tier, image_url } = req.body;
     
     executeUpdate(
-      'INSERT INTO characters (name, element, rarity, role, image_url) VALUES (?, ?, ?, ?, ?)',
-      [name, element, rarity, role, image_url]
+      'INSERT INTO characters (name, element, rarity, role, tier, image_url) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, element, rarity, role, tier || 'T3', image_url]
     );
     
     const lastId = executeQuery('SELECT last_insert_rowid() as id')[0].id;
@@ -74,11 +74,11 @@ export function addCharacter(req, res) {
 export function updateCharacter(req, res) {
   try {
     const { id } = req.params;
-    const { name, element, rarity, role, image_url } = req.body;
+    const { name, element, rarity, role, tier, image_url } = req.body;
     
     executeUpdate(
-      'UPDATE characters SET name = ?, element = ?, rarity = ?, role = ?, image_url = ? WHERE id = ?',
-      [name, element, rarity, role, image_url, id]
+      'UPDATE characters SET name = ?, element = ?, rarity = ?, role = ?, tier = ?, image_url = ? WHERE id = ?',
+      [name, element, rarity, role, tier, image_url, id]
     );
     
     res.json({ message: 'Character updated successfully' });

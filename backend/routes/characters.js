@@ -8,15 +8,19 @@ import {
   getCharacterRatings,
   addRating
 } from '../controllers/characterController.js';
+import { isAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// Public routes (dapat diakses siapa saja)
 router.get('/', getAllCharacters);
 router.get('/:id', getCharacterById);
-router.post('/', addCharacter);
-router.put('/:id', updateCharacter);
-router.delete('/:id', deleteCharacter);
 router.get('/:id/ratings', getCharacterRatings);
 router.post('/:id/ratings', addRating);
+
+// Admin only routes (hanya admin yang bisa mengakses)
+router.post('/', isAdmin, addCharacter);
+router.put('/:id', isAdmin, updateCharacter);
+router.delete('/:id', isAdmin, deleteCharacter);
 
 export default router;
