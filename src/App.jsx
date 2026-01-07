@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Header from './components/Header'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import About from './components/tierlist'
@@ -24,9 +25,10 @@ function App() {
 
   return (
     <Background page={currentPage}>
-      <Navbar onNavigate={setCurrentPage} onAdminClick={handleAdminClick} />
+      <Header onAdminClick={handleAdminClick} />
+      <Navbar onNavigate={setCurrentPage} />
 
-      <div style={{ marginLeft: '170px', padding: '20px' }}>
+      <div style={{ marginLeft: '170px', marginTop: '80px', padding: '20px' }}>
         {currentPage === 'home' && <Home />}
         {currentPage === 'about' && <About key={refreshTrigger} />}
       </div>
