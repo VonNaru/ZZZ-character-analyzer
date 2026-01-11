@@ -1,12 +1,3 @@
--- Users table
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    role TEXT DEFAULT 'user' CHECK(role IN ('admin', 'user')),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Characters table
 CREATE TABLE IF NOT EXISTS characters (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,10 +37,6 @@ CREATE TABLE IF NOT EXISTS ratings (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (character_id) REFERENCES characters(id)
 );
-
--- Insert default admin user (password: admin123)
-INSERT INTO users (username, password, role) VALUES
-('admin', 'admin123', 'admin');
 
 -- Insert sample characters with tier
 INSERT INTO characters (name, element, rarity, role, tier, image_url) VALUES

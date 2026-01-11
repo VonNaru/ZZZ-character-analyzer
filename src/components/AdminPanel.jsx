@@ -121,12 +121,11 @@ const styles = {
   }
 };
 
-export default function AdminPanel({ onClose, onCharacterAdded }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+export default function AdminPanel({ onClose, onCharacterAdded, user }) {
   const [error, setError] = useState('');
+  
+  // Check if user is admin
+  const isAdmin = user && user.role === 'admin';
   
   // Form state untuk karakter baru
   const [characterForm, setCharacterForm] = useState({
@@ -138,45 +137,14 @@ export default function AdminPanel({ onClose, onCharacterAdded }) {
     image_url: ''
   });
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    
-    try {
-      console.log('Attempting login with:', { username, password });
-      
-      const response = await fetch('http://localhost:3001/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      
-      console.log('Response status:', response.status);
-      
-      const data = await response.json();
-      console.log('Response data:', data);
-      
-      if (response.ok) {
-        setIsLoggedIn(true);
-        setIsAdmin(data.user.role === 'admin');
-        
-        if (data.user.role !== 'admin') {
-          setError('Anda bukan admin. Tidak bisa menambah karakter.');
-        }
-      } else {
-        setError(data.error || 'Login gagal');
-      }
-    } catch (err) {
-      setError('Terjadi kesalahan saat login: ' + err.message);
-      console.error('Login error:', err);
-    }
-  };
-
   const handleAddCharacter = async (e) => {
     e.preventDefault();
     setError('');
+    
+    if (!isAdmin) {
+      setError('Anda tidak memiliki akses admin');
+      return;
+    }
     
     try {
       const response = await fetch('http://localhost:3001/api/characters', {
@@ -186,8 +154,8 @@ export default function AdminPanel({ onClose, onCharacterAdded }) {
         },
         body: JSON.stringify({
           ...characterForm,
-          username,
-          password
+          username: user.username,
+          password: 'dummy' // You might want to use token-based auth instead
         }),
       });
       
@@ -231,65 +199,27 @@ export default function AdminPanel({ onClose, onCharacterAdded }) {
           onMouseEnter={(e) => e.target.style.color = '#ff4444'}
           onMouseLeave={(e) => e.target.style.color = '#fff'}
         >
-          ×
+          x
         </button>
         
         <h2 style={styles.h2}>Admin Panel</h2>
         
-        {!isLoggedIn ? (
-          <form onSubmit={handleLogin} style={styles.form}>
-            <h3 style={styles.h3}>Login Admin</h3>
-            
-            {error && <div style={styles.errorMessage}>{error}</div>}
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Username:</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                style={styles.input}
-                onFocus={(e) => e.target.style.borderColor = '#4a90e2'}
-                onBlur={(e) => e.target.style.borderColor = '#333'}
-              />
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Password:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                style={styles.input}
-                onFocus={(e) => e.target.style.borderColor = '#4a90e2'}
-                onBlur={(e) => e.target.style.borderColor = '#333'}
-              />
-            </div>
-            
-            <button 
-              type="submit" 
-              style={styles.button}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = 'none';
-              }}
-            >
-              Login
-            </button>
-            
-            <div style={styles.hint}>
-              <small style={styles.hintText}>Hint: username: admin, password: admin123</small>
-            </div>
-          </form>
-        ) : isAdmin ? (
+        {!user ? (
+          <div style={styles.errorMessage}>
+            Silakan login terlebih dahulu untuk mengakses panel ini.
+          </div>
+        ) : !isAdmin ? (
+          <div style={styles.errorMessage}>
+            Akses ditolak. Hanya admin yang dapat menambah karakter.
+            <br /><br />
+            <small>Login sebagai: <strong>{user.username}</strong> ({user.role})</small>
+          </div>
+        ) : (
           <div>
             <h3 style={styles.h3}>Tambah Karakter Baru</h3>
+            <div style={{ color: '#aaa', marginBottom: '15px', fontSize: '14px' }}>
+              Login sebagai: <strong style={{ color: '#667eea' }}>{user.username}</strong> (Admin)
+            </div>
             
             {error && <div style={styles.errorMessage}>{error}</div>}
             
@@ -403,10 +333,6 @@ export default function AdminPanel({ onClose, onCharacterAdded }) {
                 Tambah Karakter
               </button>
             </form>
-          </div>
-        ) : (
-          <div style={styles.errorMessage}>
-            Anda bukan admin. Tidak dapat menambah karakter.
           </div>
         )}
       </div>

@@ -34,6 +34,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   console.log(`API endpoints:`);
+  console.log(`  POST   http://localhost:${PORT}/api/auth/signup`);
   console.log(`  POST   http://localhost:${PORT}/api/auth/login`);
   console.log(`  POST   http://localhost:${PORT}/api/auth/check-admin`);
   console.log(`  GET    http://localhost:${PORT}/api/characters (Public)`);

@@ -1,4 +1,4 @@
-import { getDb } from '../database/db.js';
+import { getAuthDb } from '../database/db.js';
 
 // Middleware untuk cek apakah user adalah admin
 export function isAdmin(req, res, next) {
@@ -9,7 +9,7 @@ export function isAdmin(req, res, next) {
   }
   
   try {
-    const db = getDb();
+    const db = getAuthDb();
     const stmt = db.prepare('SELECT * FROM users WHERE username = ? AND password = ? AND role = ?');
     stmt.bind([username, password, 'admin']);
     
@@ -36,7 +36,7 @@ export function authenticate(req, res, next) {
   }
   
   try {
-    const db = getDb();
+    const db = getAuthDb();
     const stmt = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?');
     stmt.bind([username, password]);
     

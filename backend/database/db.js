@@ -6,32 +6,43 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-let db;
+let db; // Characters database
+let authDb; // Authentication database
 
-// Initialize database
+// Initialize databases
 export async function initializeDatabase() {
   const SQL = await initSqlJs();
-  const dbPath = join(__dirname, 'zzz_characters.db');
   
-  // Load existing database or create new one
+  // Initialize Characters Database
+  const dbPath = join(__dirname, 'zzz_characters.db');
   if (existsSync(dbPath)) {
     const buffer = readFileSync(dbPath);
     db = new SQL.Database(buffer);
-    console.log('Database loaded from file');
+    console.log('Characters database loaded from file');
   } else {
     db = new SQL.Database();
-    
-    // Run schema
     const schema = readFileSync(join(__dirname, 'schema.sql'), 'utf-8');
     db.exec(schema);
-    
-    // Save database to file
     saveDatabase();
-    console.log('Database initialized successfully');
+    console.log('Characters database initialized successfully');
+  }
+  
+  // Initialize Auth Database
+  const authDbPath = join(__dirname, 'auth.db');
+  if (existsSync(authDbPath)) {
+    const buffer = readFileSync(authDbPath);
+    authDb = new SQL.Database(buffer);
+    console.log('Auth database loaded from file');
+  } else {
+    authDb = new SQL.Database();
+    const authSchema = readFileSync(join(__dirname, 'auth_schema.sql'), 'utf-8');
+    authDb.exec(authSchema);
+    saveAuthDatabase();
+    console.log('Auth database initialized successfully');
   }
 }
 
-// Save database to file
+// Save characters database to file
 export function saveDatabase() {
   const dbPath = join(__dirname, 'zzz_characters.db');
   const data = db.export();
@@ -39,9 +50,22 @@ export function saveDatabase() {
   writeFileSync(dbPath, buffer);
 }
 
-// Get database instance
+// Save auth database to file
+export function saveAuthDatabase() {
+  const authDbPath = join(__dirname, 'auth.db');
+  const data = authDb.export();
+  const buffer = Buffer.from(data);
+  writeFileSync(authDbPath, buffer);
+}
+
+// Get characters database instance
 export function getDb() {
   return db;
 }
 
-export default { initializeDatabase, getDb, saveDatabase };
+// Get auth database instance
+export function getAuthDb() {
+  return authDb;
+}
+
+export default { initializeDatabase, getDb, getAuthDb, saveDatabase, saveAuthDatabase };

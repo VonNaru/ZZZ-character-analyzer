@@ -39,10 +39,40 @@ const styles = {
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'all 0.3s'
+  },
+  logoutButton: {
+    padding: '8px 20px',
+    backgroundColor: '#ff4444',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '6px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.3s'
+  },
+  userInfo: {
+    color: '#aaa',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+  userBadge: {
+    padding: '4px 10px',
+    backgroundColor: 'rgba(102, 126, 234, 0.2)',
+    borderRadius: '12px',
+    fontSize: '12px',
+    color: '#667eea',
+    fontWeight: '600'
+  },
+  adminBadge: {
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    color: '#ffd700'
   }
 };
 
-export default function Header({ onAdminClick }) {
+export default function Header({ onAdminClick, user, onLogout }) {
   return (
     <div style={styles.header}>
       <div style={styles.logo}>
@@ -51,6 +81,18 @@ export default function Header({ onAdminClick }) {
       </div>
       
       <div style={styles.buttons}>
+        {user && (
+          <div style={styles.userInfo}>
+            <span>Hi, <strong style={{ color: '#fff' }}>{user.username}</strong></span>
+            <span style={{
+              ...styles.userBadge,
+              ...(user.role === 'admin' ? styles.adminBadge : {})
+            }}>
+              {user.role === 'admin' ? '👑 Admin' : '👤 User'}
+            </span>
+          </div>
+        )}
+        
         <button 
           style={styles.adminButton}
           onClick={onAdminClick}
@@ -63,8 +105,25 @@ export default function Header({ onAdminClick }) {
             e.target.style.transform = 'translateY(0)';
           }}
         >
-          Admin Panel
+          {user ? 'Admin Panel' : 'Login'}
         </button>
+        
+        {user && (
+          <button 
+            style={styles.logoutButton}
+            onClick={onLogout}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#ff6666';
+              e.target.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = '#ff4444';
+              e.target.style.transform = 'translateY(0)';
+            }}
+          >
+            Logout
+          </button>
+        )}
       </div>
     </div>
   );
