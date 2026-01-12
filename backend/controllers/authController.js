@@ -1,4 +1,8 @@
 import { getAuthDb, saveAuthDatabase } from '../database/db.js';
+import bcrypt from 'bcrypt';
+
+// Dummy hash untuk mencegah timing attack - hash dari string random
+const DUMMY_HASH = '$2b$10$aaaaaaaaaaaaaaaaaaaaaaaa.eeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 // Validasi email
 function isValidEmail(email) {
@@ -80,9 +84,13 @@ export function signup(req, res) {
     }
     checkEmailStmt.free();
     
+    // Hash password sebelum disimpan
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(password, saltRounds);
+    
     // Insert user baru dengan role 'user'
     const insertStmt = db.prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
-    insertStmt.bind([username, email, password, 'user']);
+    insertStmt.bind([username, email, hashedPassword, 'user']);
     insertStmt.step();
     insertStmt.free();
     
@@ -123,12 +131,23 @@ export function login(req, res) {
   
   try {
     const db = getAuthDb();
-    const stmt = db.prepare('SELECT id, username, email, role FROM users WHERE username = ? AND password = ?');
-    stmt.bind([username, password]);
+    const stmt = db.prepare('SELECT id, username, email, password, role FROM users WHERE username = ?');
+    stmt.bind([username]);
+    
+    let user = null;
+    let hashToCompare = DUMMY_HASH; // Default ke dummy hash
     
     if (stmt.step()) {
-      const user = stmt.getAsObject();
-      stmt.free();
+      user = stmt.getAsObject();
+      hashToCompare = user.password; // Gunakan hash asli jika user ditemukan
+    }
+    stmt.free();
+    
+    // SELALU lakukan bcrypt comparison untuk constant-time execution
+    const isPasswordValid = bcrypt.compareSync(password, hashToCompare);
+    
+    // Hanya berhasil jika user ditemukan DAN password valid
+    if (user && isPasswordValid) {
       res.json({ 
         success: true, 
         user: {
@@ -139,7 +158,7 @@ export function login(req, res) {
         }
       });
     } else {
-      stmt.free();
+      // Error message yang sama untuk user tidak ditemukan ATAU password salah
       res.status(401).json({ error: 'Username atau password salah' });
     }
   } catch (error) {
@@ -157,15 +176,26 @@ export function checkAdmin(req, res) {
   
   try {
     const db = getAuthDb();
-    const stmt = db.prepare('SELECT role FROM users WHERE username = ? AND password = ?');
-    stmt.bind([username, password]);
+    const stmt = db.prepare('SELECT password, role FROM users WHERE username = ?');
+    stmt.bind([username]);
+    
+    let user = null;
+    let hashToCompare = DUMMY_HASH; // Default ke dummy hash
     
     if (stmt.step()) {
-      const user = stmt.getAsObject();
-      stmt.free();
+      user = stmt.getAsObject();
+      hashToCompare = user.password; // Gunakan hash asli jika user ditemukan
+    }
+    stmt.free();
+    
+    // SELALU lakukan bcrypt comparison untuk constant-time execution
+    const isPasswordValid = bcrypt.compareSync(password, hashToCompare);
+    
+    // Hanya berhasil jika user ditemukan DAN password valid
+    if (user && isPasswordValid) {
       res.json({ isAdmin: user.role === 'admin' });
     } else {
-      stmt.free();
+      // Error message yang sama untuk user tidak ditemukan ATAU password salah
       res.status(401).json({ error: 'Username atau password salah' });
     }
   } catch (error) {

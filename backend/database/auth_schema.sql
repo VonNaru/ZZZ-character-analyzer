@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert default admin user (password: Admin123)
+-- Insert default admin user (password: Admin123, hashed dengan bcrypt)
 INSERT INTO users (username, email, password, role) VALUES
-('admin', 'admin@zzz.com', 'Admin123', 'admin');
+('admin', 'admin@zzz.com', '$2b$10$V/GrUpStaayTLdP1EVizxOyLIykDunX7ruCEMSCOXQ.NeU5nR0TfO', 'admin');

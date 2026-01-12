@@ -1,4 +1,5 @@
 import { getAuthDb } from '../database/db.js';
+import bcrypt from 'bcrypt';
 
 // Middleware untuk cek apakah user adalah admin
 export function isAdmin(req, res, next) {
@@ -10,14 +11,28 @@ export function isAdmin(req, res, next) {
   
   try {
     const db = getAuthDb();
-    const stmt = db.prepare('SELECT * FROM users WHERE username = ? AND password = ? AND role = ?');
-    stmt.bind([username, password, 'admin']);
+    const stmt = db.prepare('SELECT id, username, email, password, role FROM users WHERE username = ?');
+    stmt.bind([username]);
     
     if (stmt.step()) {
       const user = stmt.getAsObject();
-      req.user = user;
       stmt.free();
-      next();
+      
+      // Verifikasi password dengan bcrypt
+      const isPasswordValid = bcrypt.compareSync(password, user.password);
+      
+      if (isPasswordValid && user.role === 'admin') {
+        // Jangan kirim password ke req.user
+        req.user = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role
+        };
+        next();
+      } else {
+        res.status(403).json({ error: 'Akses ditolak. Hanya admin yang dapat melakukan aksi ini.' });
+      }
     } else {
       stmt.free();
       res.status(403).json({ error: 'Akses ditolak. Hanya admin yang dapat melakukan aksi ini.' });
@@ -37,14 +52,28 @@ export function authenticate(req, res, next) {
   
   try {
     const db = getAuthDb();
-    const stmt = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?');
-    stmt.bind([username, password]);
+    const stmt = db.prepare('SELECT id, username, email, password, role FROM users WHERE username = ?');
+    stmt.bind([username]);
     
     if (stmt.step()) {
       const user = stmt.getAsObject();
-      req.user = user;
       stmt.free();
-      next();
+      
+      // Verifikasi password dengan bcrypt
+      const isPasswordValid = bcrypt.compareSync(password, user.password);
+      
+      if (isPasswordValid) {
+        // Jangan kirim password ke req.user
+        req.user = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role
+        };
+        next();
+      } else {
+        res.status(401).json({ error: 'Username atau password salah' });
+      }
     } else {
       stmt.free();
       res.status(401).json({ error: 'Username atau password salah' });
