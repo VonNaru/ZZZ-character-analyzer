@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import About from './components/tierlist'
+import Favorites from './components/Favorites'
 import Background from './components/background'
 import AdminPanel from './components/AdminPanel'
 import LoginModal from './components/LoginModal'
@@ -73,6 +74,7 @@ function App() {
       <div style={{ marginLeft: '170px', marginTop: '80px', padding: '20px' }}>
         {currentPage === 'home' && <Home />}
         {currentPage === 'about' && <About key={refreshTrigger} />}
+        {currentPage === 'favorites' && <Favorites key={refreshTrigger} />}
       </div>
 
       {showLoginModal && (

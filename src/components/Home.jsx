@@ -1,4 +1,4 @@
-import maluImage from '/pictures/malu_tuh.jpg'
+import maluImage from '/images/malu_tuh.jpg'
 
 export default function Home() {
   return (

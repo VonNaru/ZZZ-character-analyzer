@@ -1,16 +1,55 @@
-# React + Vite
+# ZZZ Character Analyzer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Personal Tier List & Character Analysis for Zenless Zone Zero
 
-Currently, two official plugins are available:
+Website untuk membuat personal tier list dan analisis karakter game Zenless Zone Zero dengan sistem login dan role-based access control.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- 🎮 **Official Tier List** - Lihat tier list karakter official
+- ⭐ **Personal Tier List** - Buat tier list sendiri dengan drag & drop
+- 🔐 **User Authentication** - Sign up, login, dan role management
+- 👑 **Admin Panel** - Manage karakter (admin only)
+- 📱 **Responsive UI** - Modern dan user-friendly
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Quick Start
 
-## Expanding the ESLint configuration
+```bash
+# Install dependencies
+npm install
+cd backend && npm install && cd ..
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Run development server (frontend + backend)
+npm run dev:all
+
+# Access
+# Frontend: http://localhost:5173
+# Backend:  http://localhost:3001
+```
+
+## 🔑 Default Credentials
+
+**Admin Account:**
+- Username: `admin`
+- Password: `Admin123`
+
+## 📚 Documentation
+
+Lihat [DOKUMENTASI.md](docs/DOKUMENTASI.md) untuk dokumentasi lengkap.
+
+## 🛠️ Tech Stack
+
+- React 19 + Vite 7
+- Node.js + Express.js
+- SQLite (sql.js)
+- bcrypt
+
+## 📸 Screenshots
+
+- Home: Character overview
+- Tier List: Official tier ranking
+- Favorites: Personal tier list with drag & drop
+
+---
+
+Made with ❤️ for ZZZ Players

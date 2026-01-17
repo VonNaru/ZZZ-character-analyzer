@@ -1,4 +1,4 @@
-import maluImage from '/pictures/malu_tuh.jpg'
+import maluImage from '/images/malu_tuh.jpg'
 
 function Navbar({ onNavigate }) {
   return (
@@ -8,7 +8,10 @@ function Navbar({ onNavigate }) {
         Home
       </button>
       <button style={buttonStyle} onClick={() => onNavigate('about')}>
-        About
+        Tier List
+      </button>
+      <button style={buttonStyle} onClick={() => onNavigate('favorites')}>
+        ⭐ Favorites
       </button>
     </nav>
   )

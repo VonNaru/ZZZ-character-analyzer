@@ -83,7 +83,6 @@ export default function Header({ onAdminClick, user, onLogout }) {
       <div style={styles.buttons}>
         {user && (
           <div style={styles.userInfo}>
-            <span>Hi, <strong style={{ color: '#fff' }}>{user.username}</strong></span>
             <span style={{
               ...styles.userBadge,
               ...(user.role === 'admin' ? styles.adminBadge : {})

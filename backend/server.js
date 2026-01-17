@@ -4,6 +4,7 @@ import { initializeDatabase } from './database/db.js';
 import characterRoutes from './routes/characters.js';
 import tierListRoutes from './routes/tierLists.js';
 import authRoutes from './routes/auth.js';
+import favoritesRoutes from './routes/favorites.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/characters', characterRoutes);
 app.use('/api/tierlists', tierListRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -47,4 +49,8 @@ app.listen(PORT, () => {
   console.log(`  POST   http://localhost:${PORT}/api/tierlists`);
   console.log(`  PUT    http://localhost:${PORT}/api/tierlists/:id`);
   console.log(`  DELETE http://localhost:${PORT}/api/tierlists/:id`);
+  console.log(`  GET    http://localhost:${PORT}/api/favorites`);
+  console.log(`  POST   http://localhost:${PORT}/api/favorites`);
+  console.log(`  PUT    http://localhost:${PORT}/api/favorites/:id`);
+  console.log(`  DELETE http://localhost:${PORT}/api/favorites/:id`);
 });

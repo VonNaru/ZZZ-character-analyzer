@@ -38,6 +38,19 @@ CREATE TABLE IF NOT EXISTS ratings (
     FOREIGN KEY (character_id) REFERENCES characters(id)
 );
 
+-- Favorites table - user can add characters with custom tier
+CREATE TABLE IF NOT EXISTS favorites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    character_id INTEGER NOT NULL,
+    custom_tier TEXT NOT NULL,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (character_id) REFERENCES characters(id),
+    UNIQUE(user_id, character_id)
+);
+
 -- Insert sample characters with tier
 INSERT INTO characters (name, element, rarity, role, tier, image_url) VALUES
 ('Jane Doe', NULL, 5, 'Attacker', 'T0', 'https://img.game8.co/4372195/ea916a2155290708a65bdec8dba028ce.png/show'),
